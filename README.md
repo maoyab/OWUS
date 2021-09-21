@@ -1,14 +1,14 @@
-# Inference of Optimal Ecosystem Water Use Strategies
+# Inference of Optimal Ecosystem-Scale Water Use Strategies
  
 
 This repository contains scripts necessary to repeat analysis in:
 
-M Bassiouni, S Manzoni, and G Vico (in prep). Optimal ecosystem water use strategies explain soil moisture variability.
+M Bassiouni, S Manzoni, and G Vico (in prep). Optimal ecosystem-scale water use strategies explain soil moisture variability.
 
 
 - *WUE_theory.ipynb*: executes scripts in this repository to generate theoretical figures of water use strategies
 
-- *WUE_application.ipynb*: executes scripts in this repository to visualize results from the analysis of data-driven versus optimality-based water use strategies at study sites.
+- *WUE_application.ipynb*: executes scripts in this repository to visualize results from the inferrence of data-driven versus optimality-based water use strategies at study sites.
 
 - *SPAC_traits_formulas.nb*: provides a simple parameterization of the soil-plant-atmosphere continuum and solves for leaf water potential, well-watered transpiration rate, and soil water potential at a given transpiration rate. (see details in https://doi.org/10.1002/2014WR015375)
 
