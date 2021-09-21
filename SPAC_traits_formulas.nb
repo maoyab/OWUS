@@ -1,0 +1,564 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     20730,        556]
+NotebookOptionsPosition[     19835,        535]
+NotebookOutlinePosition[     20255,        551]
+CellTagsIndexPosition[     20212,        548]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"assume", "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Kpmax", ">", "0"}], ",", 
+      RowBox[{"Gcmax", ">", "0"}], ",", 
+      RowBox[{"psix50", "<", "0"}], ",", 
+      RowBox[{"psig50", "<", "0"}], ",", 
+      RowBox[{"psiSsat", "<", "0"}], ",", 
+      RowBox[{
+       RowBox[{"Ksr", "[", "psiS", "]"}], ">", "0"}], ",", 
+      RowBox[{"Ksrmax", ">", "0"}], ",", 
+      RowBox[{"psiS", "<", "0"}], ",", 
+      RowBox[{"psiL", "<", "0"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"xylem", " ", "and", " ", "stomatal", " ", "conductances"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Kp", "[", 
+     RowBox[{"psiS_", ",", "psiL_"}], "]"}], ":=", 
+    RowBox[{"Kpmax", 
+     RowBox[{"(", 
+      RowBox[{"1", "-", 
+       RowBox[{"psiL", "/", 
+        RowBox[{"(", 
+         RowBox[{"2", " ", "psix50"}], ")"}]}]}], ")"}]}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"xylem", " ", "vulnerability", " ", "curve", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"m", "/", "d"}], "/", "MPa"}], ")"}]}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Gc", "[", "psiL_", "]"}], ":=", 
+    RowBox[{"Gcmax", " ", 
+     RowBox[{"(", 
+      RowBox[{"1", "-", 
+       RowBox[{"psiL", "/", 
+        RowBox[{"(", 
+         RowBox[{"2", " ", "psig50"}], ")"}]}]}], ")"}]}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"stomatal", " ", "response", " ", 
+    RowBox[{"(", 
+     RowBox[{"m", "/", "d"}], ")"}]}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Gtot", "[", 
+     RowBox[{"psiS_", ",", "psiL_"}], "]"}], ":=", 
+    RowBox[{"Simplify", "[", 
+     RowBox[{
+      RowBox[{"Ksr", "[", "psiS", "]"}], " ", 
+      RowBox[{
+       RowBox[{"Kp", "[", 
+        RowBox[{"psiS", ",", "psiL"}], "]"}], "/", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Ksr", "[", "psiS", "]"}], "+", 
+         RowBox[{"Kp", "[", 
+          RowBox[{"psiS", ",", "psiL"}], "]"}]}], ")"}]}]}], "]"}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"total", " ", "soil"}], "-", 
+    RowBox[{"leaf", " ", "conductance", " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"m", "/", "d"}], "/", "MPa"}], ")"}]}]}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"T", "[", "psiS_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{"Gc", "[", "psiL", "]"}], " ", "VPD"}]}], ";"}], " ", 
+  RowBox[{"(*", 
+   RowBox[{"transpiration", " ", "rate", " ", 
+    RowBox[{"(", 
+     RowBox[{"m", "/", "d"}], ")"}]}], "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"solve", " ", "for", " ", "leaf", " ", "water", " ", "potential"}],
+    "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sol", "=", 
+   RowBox[{"Simplify", "[", 
+    RowBox[{
+     RowBox[{"Solve", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"T", "[", "psiS", "]"}], "\[Equal]", 
+        RowBox[{
+         RowBox[{"Gtot", "[", 
+          RowBox[{"psiS", ",", "psiL"}], "]"}], 
+         RowBox[{"(", 
+          RowBox[{"psiS", "-", "psiL"}], ")"}]}]}], ",", "psiL"}], "]"}], ",", 
+     RowBox[{"Assumptions", "\[Rule]", "assume"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"solww", "=", 
+    RowBox[{"Simplify", "[", 
+     RowBox[{
+      RowBox[{"Solve", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"T", "[", "psiS", "]"}], "\[Equal]", 
+         RowBox[{
+          RowBox[{"Kp", "[", 
+           RowBox[{"psiS", ",", "psiL"}], "]"}], 
+          RowBox[{"(", 
+           RowBox[{"-", "psiL"}], ")"}]}]}], ",", "psiL"}], "]"}], ",", 
+      RowBox[{"Assumptions", "\[Rule]", "assume"}]}], "]"}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"well", "-", 
+     RowBox[{"watered", " ", "conditions"}]}], ",", " ", 
+    RowBox[{
+     RowBox[{"assuming", " ", "Ksr"}], "\[RightArrow]", "\[Infinity]"}]}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"psiL1", "=", 
+  RowBox[{
+   RowBox[{"Simplify", "[", 
+    RowBox[{
+     RowBox[{"psiL", "/.", "sol"}], ",", 
+     RowBox[{"Assumptions", "\[Rule]", "assume"}]}], "]"}], "[", 
+   RowBox[{"[", "1", "]"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"psiLww", "=", 
+   RowBox[{
+    RowBox[{"Simplify", "[", 
+     RowBox[{
+      RowBox[{"psiL", "/.", "solww"}], ",", 
+      RowBox[{"Assumptions", "\[Rule]", "assume"}]}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], 
+  RowBox[{"(*", 
+   RowBox[{
+   "psiL", " ", "in", " ", "well", " ", "watered", " ", "conditions"}], 
+   "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"soil", "-", 
+     RowBox[{"root", " ", "conductance"}]}], ",", " ", 
+    RowBox[{
+     RowBox[{"m", "/", "d"}], "/", "MPa"}]}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Ksr", "[", "psiS_", "]"}], ":=", 
+    RowBox[{"Ksrmax", " ", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"psiS", "/", "psiSsat"}], ")"}], "^", 
+      RowBox[{"-", "2"}]}]}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"simplified", " ", "relation"}], ",", " ", 
+    RowBox[{"assume", " ", 
+     RowBox[{"c", "/", 
+      RowBox[{"b", "~", "2"}]}]}]}], "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"transpiration", ",", " ", 
+    RowBox[{"m", "/", "d"}]}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"T1", "[", "psiS_", "]"}], ":=", 
+    RowBox[{"FullSimplify", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"T", "[", "psiS", "]"}], "/.", 
+       RowBox[{"psiL", "\[Rule]", "psiL1"}]}], ",", 
+      RowBox[{"Assumptions", "\[Rule]", "assume"}]}], "]"}]}], ";"}], 
+  RowBox[{"(*", "trees", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Tww", "[", "psiS_", "]"}], ":=", 
+    RowBox[{"FullSimplify", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"T", "[", "psiS", "]"}], "/.", 
+       RowBox[{"psiL", "\[Rule]", "psiLww"}]}], ",", 
+      RowBox[{"Assumptions", "\[Rule]", "assume"}]}], "]"}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"well", " ", "watered", " ", "trees"}], "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"T1", "[", "psiS", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Tww", "[", "psiS", "]"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "solve", " ", "for", " ", "the", " ", "soil", " ", "water", " ", 
+    "potential"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"psiSsol", "=", 
+  RowBox[{"psiS", "/.", 
+   RowBox[{
+    RowBox[{"FullSimplify", "[", 
+     RowBox[{
+      RowBox[{"Solve", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"T1", "[", "psiS", "]"}], "\[Equal]", "T0"}], ",", "psiS"}], 
+       "]"}], ",", 
+      RowBox[{"Assumptions", "\[Rule]", "assume"}]}], "]"}], "[", 
+    RowBox[{"[", "2", "]"}], "]"}]}]}]}], "Input",
+ CellChangeTimes->{
+  3.7233827917179537`*^9, {3.799464024281104*^9, 3.7994641340228157`*^9}, {
+   3.799464194409484*^9, 3.799464404895933*^9}, {3.799464441984835*^9, 
+   3.7994645229963493`*^9}, {3.799466414677595*^9, 3.7994664659686766`*^9}, {
+   3.7994665127248325`*^9, 3.799466513038986*^9}, {3.799466553859649*^9, 
+   3.799466563879856*^9}, {3.799466596544524*^9, 3.799466601805502*^9}, {
+   3.799466633203606*^9, 3.799466634039359*^9}, {3.7994682107344427`*^9, 
+   3.7994682241546*^9}, {3.799468332456189*^9, 3.7994685480618057`*^9}, {
+   3.7994685819562263`*^9, 3.7994687719644413`*^9}, {3.799468817800944*^9, 
+   3.7994688197507334`*^9}, {3.7994689095195*^9, 3.7994690265764847`*^9}, {
+   3.799476183293145*^9, 3.799476190193737*^9}, {3.7994765771662045`*^9, 
+   3.799476581641268*^9}, {3.7994768982730083`*^9, 3.7994769088786583`*^9}, {
+   3.799478490678768*^9, 3.7994784912103753`*^9}, {3.7994785330545645`*^9, 
+   3.7994785346961775`*^9}, {3.7994857575932274`*^9, 3.799485761879773*^9}, {
+   3.799492391577546*^9, 3.7994924210627494`*^9}, {3.799492503357938*^9, 
+   3.7994925229120283`*^9}, {3.7994925848496056`*^9, 
+   3.7994925854609723`*^9}, {3.799493150446145*^9, 3.799493197091638*^9}, {
+   3.7994932279003987`*^9, 3.799493228286357*^9}, {3.799496648539627*^9, 
+   3.799496649233818*^9}, {3.7996434195199623`*^9, 3.7996434456262445`*^9}, {
+   3.799643544108052*^9, 3.7996436306675773`*^9}, {3.7996437181677256`*^9, 
+   3.79964376020639*^9}, {3.799643812973353*^9, 3.799643819061092*^9}, {
+   3.799644267456826*^9, 3.79964427011174*^9}, {3.7996448909891148`*^9, 
+   3.799644916378262*^9}, {3.799645181359768*^9, 3.7996452334405804`*^9}, {
+   3.79964560721987*^9, 3.7996456116011286`*^9}, {3.8408580530873375`*^9, 
+   3.8408582129405584`*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"d58d6cd8-92da-4180-b253-d230fad14f1b"],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", 
+   RowBox[{"Kpmax", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"Gcmax", " ", "VPD"}], "-", 
+      RowBox[{"2", " ", "psig50", " ", 
+       RowBox[{"Ksr", "[", "psiS", "]"}]}]}], ")"}]}]], 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"Gcmax", " ", "Kpmax", " ", "psig50", " ", "VPD"}], "+", 
+    RowBox[{"Gcmax", " ", "Kpmax", " ", "psix50", " ", "VPD"}], "-", 
+    RowBox[{"Kpmax", " ", "psig50", " ", "psiS", " ", 
+     RowBox[{"Ksr", "[", "psiS", "]"}]}], "-", 
+    RowBox[{"2", " ", "Kpmax", " ", "psig50", " ", "psix50", " ", 
+     RowBox[{"Ksr", "[", "psiS", "]"}]}], "+", 
+    RowBox[{"Gcmax", " ", "psix50", " ", "VPD", " ", 
+     RowBox[{"Ksr", "[", "psiS", "]"}]}], "+", 
+    RowBox[{"\[Sqrt]", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"4", " ", "Kpmax", " ", "psig50", " ", "psix50", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"-", "Gcmax"}], " ", "VPD"}], "+", 
+          RowBox[{"2", " ", "psig50", " ", 
+           RowBox[{"Ksr", "[", "psiS", "]"}]}]}], ")"}], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Gcmax", " ", "Kpmax", " ", "VPD"}], "+", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"-", "Kpmax"}], " ", "psiS"}], "+", 
+             RowBox[{"Gcmax", " ", "VPD"}]}], ")"}], " ", 
+           RowBox[{"Ksr", "[", "psiS", "]"}]}]}], ")"}]}], "+", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Gcmax", " ", "Kpmax", " ", 
+           RowBox[{"(", 
+            RowBox[{"psig50", "+", "psix50"}], ")"}], " ", "VPD"}], "+", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"-", "Kpmax"}], " ", "psig50", " ", 
+              RowBox[{"(", 
+               RowBox[{"psiS", "+", 
+                RowBox[{"2", " ", "psix50"}]}], ")"}]}], "+", 
+             RowBox[{"Gcmax", " ", "psix50", " ", "VPD"}]}], ")"}], " ", 
+           RowBox[{"Ksr", "[", "psiS", "]"}]}]}], ")"}], "2"]}], ")"}]}]}], 
+   ")"}]}]], "Output",
+ CellChangeTimes->{
+  3.799476910513266*^9, 3.7994785369461403`*^9, 3.7994857663129272`*^9, 
+   3.7994925884779253`*^9, 3.7994966562540245`*^9, 3.7996434471581306`*^9, 
+   3.7996435913266926`*^9, 3.799643649976924*^9, {3.799643826464294*^9, 
+   3.799643841041313*^9}, {3.7996442708098216`*^9, 3.7996442780893917`*^9}, 
+   3.799645094400126*^9, 3.8408620930787516`*^9},
+ CellLabel->"Out[3]=",ExpressionUUID->"69b74328-115c-4b72-ad41-43a2deca011e"],
+
+Cell[BoxData[
+ RowBox[{"-", 
+  FractionBox[
+   RowBox[{"psix50", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"-", "Kpmax"}], "+", 
+      FractionBox[
+       RowBox[{"Gcmax", " ", "VPD"}], 
+       RowBox[{"2", " ", "psig50"}]], "+", 
+      SqrtBox[
+       RowBox[{
+        FractionBox[
+         RowBox[{"2", " ", "Gcmax", " ", "Kpmax", " ", "VPD"}], "psix50"], 
+        "+", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"Kpmax", "-", 
+           FractionBox[
+            RowBox[{"Gcmax", " ", "VPD"}], 
+            RowBox[{"2", " ", "psig50"}]]}], ")"}], "2"]}]]}], ")"}]}], 
+   "Kpmax"]}]], "Output",
+ CellChangeTimes->{
+  3.799476910513266*^9, 3.7994785369461403`*^9, 3.7994857663129272`*^9, 
+   3.7994925884779253`*^9, 3.7994966562540245`*^9, 3.7996434471581306`*^9, 
+   3.7996435913266926`*^9, 3.799643649976924*^9, {3.799643826464294*^9, 
+   3.799643841041313*^9}, {3.7996442708098216`*^9, 3.7996442780893917`*^9}, 
+   3.799645094400126*^9, 3.8408620930839224`*^9},
+ CellLabel->"Out[4]=",ExpressionUUID->"0aa0a73f-ba02-4be4-a037-92d217246cb9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{"Gcmax", " ", "VPD", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"Kpmax", " ", "Ksrmax", " ", "psig50", " ", 
+       SuperscriptBox["psiSsat", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"4", " ", "psig50"}], "-", "psiS", "-", 
+         RowBox[{"2", " ", "psix50"}]}], ")"}]}], "+", 
+      RowBox[{"Gcmax", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Ksrmax", " ", 
+          SuperscriptBox["psiSsat", "2"], " ", "psix50"}], "+", 
+         RowBox[{"Kpmax", " ", 
+          SuperscriptBox["psiS", "2"], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"-", "psig50"}], "+", "psix50"}], ")"}]}]}], ")"}], " ", 
+       "VPD"}], "+", 
+      RowBox[{
+       SuperscriptBox["psiS", "2"], " ", 
+       RowBox[{"\[Sqrt]", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"4", " ", "Kpmax", " ", "psig50", " ", "psix50", " ", 
+           RowBox[{"(", 
+            RowBox[{
+             FractionBox[
+              RowBox[{"2", " ", "Ksrmax", " ", "psig50", " ", 
+               SuperscriptBox["psiSsat", "2"]}], 
+              SuperscriptBox["psiS", "2"]], "-", 
+             RowBox[{"Gcmax", " ", "VPD"}]}], ")"}], " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"Gcmax", " ", "Kpmax", " ", "VPD"}], "+", 
+             FractionBox[
+              RowBox[{"Ksrmax", " ", 
+               SuperscriptBox["psiSsat", "2"], " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", "Kpmax"}], " ", "psiS"}], "+", 
+                 RowBox[{"Gcmax", " ", "VPD"}]}], ")"}]}], 
+              SuperscriptBox["psiS", "2"]]}], ")"}]}], "+", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"Gcmax", " ", "Kpmax", " ", 
+              RowBox[{"(", 
+               RowBox[{"psig50", "+", "psix50"}], ")"}], " ", "VPD"}], "+", 
+             FractionBox[
+              RowBox[{"Ksrmax", " ", 
+               SuperscriptBox["psiSsat", "2"], " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", "Kpmax"}], " ", "psig50", " ", 
+                  RowBox[{"(", 
+                   RowBox[{"psiS", "+", 
+                    RowBox[{"2", " ", "psix50"}]}], ")"}]}], "+", 
+                 RowBox[{"Gcmax", " ", "psix50", " ", "VPD"}]}], ")"}]}], 
+              SuperscriptBox["psiS", "2"]]}], ")"}], "2"]}], ")"}]}]}]}], 
+     ")"}]}], ")"}], "/", 
+  RowBox[{"(", 
+   RowBox[{"2", " ", "Kpmax", " ", "psig50", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"2", " ", "Ksrmax", " ", "psig50", " ", 
+       SuperscriptBox["psiSsat", "2"]}], "-", 
+      RowBox[{"Gcmax", " ", 
+       SuperscriptBox["psiS", "2"], " ", "VPD"}]}], ")"}]}], 
+   ")"}]}]], "Output",
+ CellChangeTimes->{
+  3.799476910513266*^9, 3.7994785369461403`*^9, 3.7994857663129272`*^9, 
+   3.7994925884779253`*^9, 3.7994966562540245`*^9, 3.7996434471581306`*^9, 
+   3.7996435913266926`*^9, 3.799643649976924*^9, {3.799643826464294*^9, 
+   3.799643841041313*^9}, {3.7996442708098216`*^9, 3.7996442780893917`*^9}, 
+   3.799645094400126*^9, 3.840862094697137*^9},
+ CellLabel->"Out[5]=",ExpressionUUID->"dbe44d20-b3a9-458e-a47c-428da4e75d6e"],
+
+Cell[BoxData[
+ RowBox[{"Gcmax", " ", "VPD", " ", 
+  RowBox[{"(", 
+   RowBox[{"1", "+", 
+    FractionBox[
+     RowBox[{"psix50", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"-", "2"}], " ", "Kpmax", " ", "psig50"}], "+", 
+        RowBox[{"Gcmax", " ", "VPD"}], "+", 
+        RowBox[{"2", " ", "psig50", " ", 
+         SqrtBox[
+          RowBox[{
+           FractionBox[
+            RowBox[{"2", " ", "Gcmax", " ", "Kpmax", " ", "VPD"}], "psix50"], 
+           "+", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{"Kpmax", "-", 
+              FractionBox[
+               RowBox[{"Gcmax", " ", "VPD"}], 
+               RowBox[{"2", " ", "psig50"}]]}], ")"}], "2"]}]]}]}], ")"}]}], 
+     RowBox[{"4", " ", "Kpmax", " ", 
+      SuperscriptBox["psig50", "2"]}]]}], ")"}]}]], "Output",
+ CellChangeTimes->{
+  3.799476910513266*^9, 3.7994785369461403`*^9, 3.7994857663129272`*^9, 
+   3.7994925884779253`*^9, 3.7994966562540245`*^9, 3.7996434471581306`*^9, 
+   3.7996435913266926`*^9, 3.799643649976924*^9, {3.799643826464294*^9, 
+   3.799643841041313*^9}, {3.7996442708098216`*^9, 3.7996442780893917`*^9}, 
+   3.799645094400126*^9, 3.8408620953367743`*^9},
+ CellLabel->"Out[6]=",ExpressionUUID->"25332bce-9731-48ed-9bd3-ce9731ca7a11"],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{
+   RowBox[{"Ksrmax", " ", 
+    SuperscriptBox["psiSsat", "2"]}], "-", 
+   FractionBox[
+    SqrtBox[
+     FractionBox[
+      RowBox[{"Gcmax", " ", "Ksrmax", " ", 
+       SuperscriptBox["psiSsat", "2"], " ", "VPD", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"psig50", " ", "T0"}], "+", 
+         RowBox[{"Gcmax", " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"-", "psig50"}], "+", "psix50"}], ")"}], " ", "VPD"}]}], 
+        ")"}], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"-", "4"}], " ", 
+          SuperscriptBox["Gcmax", "2"], " ", "psix50", " ", 
+          SuperscriptBox["T0", "2"], " ", 
+          SuperscriptBox["VPD", "2"]}], "+", 
+         RowBox[{"Kpmax", " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"psig50", " ", "T0"}], "+", 
+            RowBox[{"Gcmax", " ", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"-", "psig50"}], "+", "psix50"}], ")"}], " ", 
+             "VPD"}]}], ")"}], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Gcmax", " ", "Ksrmax", " ", 
+             SuperscriptBox["psiSsat", "2"], " ", "VPD"}], "+", 
+            RowBox[{"8", " ", "psig50", " ", "T0", " ", 
+             RowBox[{"(", 
+              RowBox[{"T0", "-", 
+               RowBox[{"Gcmax", " ", "VPD"}]}], ")"}]}]}], ")"}]}]}], ")"}]}],
+       "Kpmax"]], 
+    RowBox[{"Gcmax", " ", "VPD", " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"-", "psig50"}], " ", "T0"}], "+", 
+       RowBox[{"Gcmax", " ", 
+        RowBox[{"(", 
+         RowBox[{"psig50", "-", "psix50"}], ")"}], " ", "VPD"}]}], ")"}]}]]}], 
+  RowBox[{"2", " ", "T0"}]]], "Output",
+ CellChangeTimes->{
+  3.799476910513266*^9, 3.7994785369461403`*^9, 3.7994857663129272`*^9, 
+   3.7994925884779253`*^9, 3.7994966562540245`*^9, 3.7996434471581306`*^9, 
+   3.7996435913266926`*^9, 3.799643649976924*^9, {3.799643826464294*^9, 
+   3.799643841041313*^9}, {3.7996442708098216`*^9, 3.7996442780893917`*^9}, 
+   3.799645094400126*^9, 3.840862100831623*^9},
+ CellLabel->"Out[7]=",ExpressionUUID->"0fee251a-e29f-498c-816e-b8061e0c2998"]
+}, Open  ]]
+},
+WindowSize->{1272, 624},
+WindowMargins->{{-4, Automatic}, {Automatic, 1}},
+PrivateNotebookOptions->{"VersionedStylesheet"->{"Default.nb"[8.] -> False}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 8807, 239, 504, "Input",ExpressionUUID->"d58d6cd8-92da-4180-b253-d230fad14f1b"],
+Cell[9389, 263, 2553, 62, 122, "Output",ExpressionUUID->"69b74328-115c-4b72-ad41-43a2deca011e"],
+Cell[11945, 327, 1076, 28, 80, "Output",ExpressionUUID->"0aa0a73f-ba02-4be4-a037-92d217246cb9"],
+Cell[13024, 357, 3297, 82, 149, "Output",ExpressionUUID->"dbe44d20-b3a9-458e-a47c-428da4e75d6e"],
+Cell[16324, 441, 1284, 31, 104, "Output",ExpressionUUID->"25332bce-9731-48ed-9bd3-ce9731ca7a11"],
+Cell[17611, 474, 2208, 58, 88, "Output",ExpressionUUID->"0fee251a-e29f-498c-816e-b8061e0c2998"]
+}, Open  ]]
+}
+]
+*)
+
