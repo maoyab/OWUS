@@ -1,6 +1,6 @@
 # Inference of Optimal plant Water Use Strategies
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5518547.svg)](https://doi.org/10.5281/zenodo.5518547) 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5518546.svg)](https://doi.org/10.5281/zenodo.5518546) 
 
 This repository contains scripts necessary to repeat analysis in:
 
