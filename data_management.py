@@ -13,41 +13,25 @@ mwratio = 0.622     # - Ratio molecular weight of water vapor/dry air
 cp_air = 1005       # J/kg/k specific heat of air
 Lv = 2.5008 * 10**6 # (J/kg) is the latent heat of vaporization of water
 
-drive_w = 'E'
-drive_u = 'e'
+drive_w = '/Volumes/SLU_maoya/E'
 
 sites_params = pd.read_csv( 'sel_sites.csv')
-soil_params_file_RUC = '../../DATA/WUS/NLDAS_soilParams_RUC.csv'
+soil_params_file_RUC = '../../DATA/WUS//NLDAS_soilParams_RUC.csv'
 soil_params = pd.read_csv(soil_params_file_RUC)
-pft_params = pd.read_csv( '../../DATA/WUS/selected_pft_params_refs.csv')
+pft_params = pd.read_csv( '../../DATA/WUS//selected_pft_params_refs.csv')
 
-try:
-    data_directory = '%s:/Original_data/FLUXNET/FLUXNET2015_2020dl/unzipped' % drive_w
-    sites_files = [f for f in os.listdir(data_directory) if f.startswith('FLX')]
-except:
-    data_directory = '/mnt/%s/Original_data/FLUXNET/FLUXNET2015_2020dl/unzipped'% drive_u
-    sites_files = [f for f in os.listdir(data_directory) if f.startswith('FLX')]
 
-try:
-    lai_file = '%s:/Original_data/FLUXNET/lai-combined-1/lai-combined-1-MCD15A3H-006-results.csv'% drive_w
-    df_lai = pd.read_csv(lai_file)
-except:
-    lai_file = '/mnt/%s/Original_data/FLUXNET/lai-combined-1/lai-combined-1-MCD15A3H-006-results.csv' % drive_u
-    df_lai = pd.read_csv(lai_file)
+data_directory = os.path.join(drive_w, 'Original_data/FLUXNET/FLUXNET2015_2020dl/unzipped')
+sites_files = [f for f in os.listdir(data_directory) if f.startswith('FLX')]
 
-try:
-    fv_file = '%s:/Original_data/FLUXNET/LAI/veg-pct-yearly/veg-pct-yearly-MOD44B-006-results.csv' % drive_w
-    df_fv = pd.read_csv(fv_file)
-except:
-    fv_file = '/mnt/%s/Original_data/FLUXNET/LAI/veg-pct-yearly/veg-pct-yearly-MOD44B-006-results.csv' % drive_u
-    df_fv = pd.read_csv(fv_file)
+lai_file = os.path.join(drive_w, 'Original_data/FLUXNET/lai-combined-1/lai-combined-1-MCD15A3H-006-results.csv')
+df_lai = pd.read_csv(lai_file)
 
-try:
-    BIF_f = '%s:/Original_data/FLUXNET/FLUXNET2015_2020dl/FLX_AA-Flx_BIF_ALL_20200217/FLX_AA-Flx_BIF_HH_20200217.csv' % drive_w
-    df_BIF = pd.read_csv(BIF_f, error_bad_lines=False, engine='python')
-except:
-    BIF_f = '/mnt/%s/Original_data/FLUXNET/FLUXNET2015_2020dl/FLX_AA-Flx_BIF_ALL_20200217/FLX_AA-Flx_BIF_HH_20200217.csv' % drive_u
-    df_BIF = pd.read_csv(BIF_f, error_bad_lines=False, engine='python')
+fv_file = os.path.join(drive_w, 'Original_data/FLUXNET/LAI/veg-pct-yearly/veg-pct-yearly-MOD44B-006-results.csv')
+df_fv = pd.read_csv(fv_file)
+
+BIF_f = os.path.join(drive_w, 'Original_data/FLUXNET/FLUXNET2015_2020dl/FLX_AA-Flx_BIF_ALL_20200217/FLX_AA-Flx_BIF_HH_20200217.csv')
+df_BIF = pd.read_csv(BIF_f, error_bad_lines=False, engine='python')
 
 def get_raster_data():
     #from osgeo import gdal
@@ -62,16 +46,11 @@ def get_raster_data():
     #band = dataset.GetRasterBand(1)
     #data = band.ReadAsArray(0, 0, cols, rows)
 
-    try:
-        zr_file_d = '%s:/Original_Data/Global_effective_plant_rooting_depth/zr_data.npy' % drive_w
-        zr_file_t = '%s:/Original_Data/Global_effective_plant_rooting_depth/zr_transform.npy' % drive_w
-        data = np.load(zr_file_d)
-        transform = np.load(zr_file_t)
-    except:
-        zr_file_d = '/mnt/%s/Original_Data/Global_effective_plant_rooting_depth/zr_data.npy' % drive_u
-        zr_file_t = '/mnt/%s/Original_Data/Global_effective_plant_rooting_depth/zr_transform.npy' % drive_u 
-        data = np.load(zr_file_d)
-        transform = np.load(zr_file_t)
+    zr_file_d = os.path.join(drive_w, 'Original_Data/Global_effective_plant_rooting_depth/zr_data.npy')
+    zr_file_t = os.path.join(drive_w, 'Original_Data/Global_effective_plant_rooting_depth/zr_transform.npy')
+    data = np.load(zr_file_d)
+    transform = np.load(zr_file_t)
+
     x_origin = transform[0]
     y_origin = transform[3]
     pixel_width = transform[1]
@@ -93,7 +72,7 @@ def get_est_Zrmap(lat, lon):
         print( row, col)
 
 def get_map_soil_text(site, lat, lon):
-    soil_tex_map_file = '/mnt/m/Original_Data/GLDAS/GLDASp4_soiltexture_025d.nc4'
+    soil_tex_map_file = os.path.join(drive_w, 'Original_Data/GLDAS/GLDASp4_soiltexture_025d.nc4')
     ds_soil_map = xr.open_dataset(soil_tex_map_file)
     def __c_coor():
         # lat/lon sel. grid move because of empty gridcells
@@ -272,6 +251,64 @@ def insert_LAI(df, site, df_p, df_lai):
         df.loc[(df.index.day == day) & (df.index.month == month), 'LAI'] = lai
     return df
 
+def insert_fpar(df, site, df_p, df_lai):
+
+    if site=='IT-Ro1':
+        df_lai = df_lai[(df_lai['siteID']=='IT-Ro2')
+                        & (df_lai['MCD15A3H_006_FparLai_QC_MODLAND_Description']=='Good quality (main algorithm with or without saturation)') 
+                        & (df_lai['MCD15A3H_006_FparLai_QC_CloudState_Description']=='Significant clouds NOT present (clear)') 
+                        & (df_lai['MCD15A3H_006_FparExtra_QC_Aerosol_Description']=='No or low atmospheric aerosol levels detected')
+                        & (df_lai['MCD15A3H_006_FparLai_QC_SCF_QC_Description']=='Main (RT) method used, best result possible (no saturation)')
+                        ]
+    else:
+        df_lai = df_lai[(df_lai['siteID'] == site)
+                        & (df_lai['MCD15A3H_006_FparLai_QC_MODLAND_Description']=='Good quality (main algorithm with or without saturation)') 
+                        & (df_lai['MCD15A3H_006_FparLai_QC_CloudState_Description']=='Significant clouds NOT present (clear)') 
+                        & (df_lai['MCD15A3H_006_FparExtra_QC_Aerosol_Description']=='No or low atmospheric aerosol levels detected')
+                        & (df_lai['MCD15A3H_006_FparLai_QC_SCF_QC_Description']=='Main (RT) method used, best result possible (no saturation)')
+                        ]
+
+    fpar = df_lai['MCD15A3H_006_Fpar_500m'].values
+    
+    date = [datetime.strptime(dt, '%m/%d/%Y')
+                             for dt in df_lai['Date'].values]
+
+    df_fpar = pd.DataFrame({'fpar': fpar}, index=date)
+    df_fpar['smooth_fpar'] = np.nan
+    df_fpar = df_fpar.resample('D').mean()
+    df_fpar = df_fpar.interpolate()
+    df_fpar = df_fpar.reindex(pd.date_range(start='2003-01-01',
+                                        end='2014-12-31',
+                                        freq='D'))
+
+    df_fpar = df_fpar[~((df_fpar.index.month == 2) & (df_fpar.index.day == 29))]
+    df_fpar['Year'] = df_fpar.index.year
+    years = [y for y in list(set( df_fpar['Year'].values))]
+    doy = []
+    for y in years:
+        doy = np.concatenate((doy, range(1,366)), axis=None)
+    doy = [np.int(di) for di in doy]
+    df_fpar['DOY'] = doy
+    
+    m_avg_fpar = []
+    for c, year in enumerate(years):
+        df_fpar_ii = df_fpar[df_fpar['Year']==year]
+        m_avg_fpar.append(df_fpar_ii['fpar'].values)
+    m_avg_fpar = zip(*m_avg_fpar)
+    m_avg_fpar = [np.nanmean(mi) for mi in m_avg_fpar]
+    df_fpar['smooth_fpar'] = [m_avg_fpar[di-1] for di in df_fpar['DOY'].values]
+    m_avg_fpar_r = np.convolve(df_fpar['smooth_fpar'].values, np.ones(31) / 31, mode='same')
+    m_avg_fpar_r = list(m_avg_fpar_r[365:365*2])
+    m_avg_fpar_r.insert(31 + 28, m_avg_fpar_r[31+27])
+    fpar_dates = pd.date_range(start='2000-01-01',
+                              end='2000-12-31',
+                              freq='1D')
+
+    df['fpar'] =  np.nan
+    for month, day, fpar in zip(fpar_dates.month, fpar_dates.day, m_avg_fpar_r):
+        df.loc[(df.index.day == day) & (df.index.month == month), 'fpar'] = fpar
+    return df
+
 def get_veg_fraction(site, df_fv0):
     if site=='IT-Ro1':
         df_fv = df_fv0[(df_fv0['siteID'] == 'IT-Ro2')]
@@ -372,7 +409,7 @@ def exclude_years(df, site_name):
 
     if x_year is not None:
         selected_datetimes = [dt for dt in df.index if dt.year not in x_year]
-        df = df.ix[selected_datetimes]
+        df = df.loc[selected_datetimes]
     return df
 
 def get_site_data_flx(site, swc_i=None, x_years=True):
@@ -416,10 +453,11 @@ def get_site_data_flx(site, swc_i=None, x_years=True):
     data = data[~((data.index.month == 2) & (data.index.day == 29))]
     
     data = insert_LAI(data, site_name, df_p, df_lai)
+    data = insert_fpar(data, site_name, df_p, df_lai)
 
     data = data[['RF', 'T_air', 'VPD_air', 'SWC', 
                  'ET_obs_mol', 'ETo_mol', 'GPP',
-                 'ET_obs_m', 'ETo_m', 'LAI']]
+                 'ET_obs_m', 'ETo_m', 'LAI', 'fpar']]
 
     data = data.dropna()
     return data
@@ -443,7 +481,7 @@ def select_growing_season_doy(data, gpp_th=[95, 0.10], t_th=2, lai_th=None):
 
 
     selected_days = [i for i in data.index if i.dayofyear in doy_gs]
-    data_gs = data.ix[selected_days]
+    data_gs = data.loc[selected_days]
     
     years = [yi for yi in range(np.min(data_gs.index.year), np.max(data_gs.index.year) + 1) if yi in data_gs.index.year]
     data_gs = data_gs.resample('D').mean().dropna()
@@ -475,7 +513,7 @@ def select_growing_season(data, gpp_th=[95, 0.10], t_th=2, lai_th=None):
         months_gs = list(data_m.index)
 
     selected_days = [i for i in data.index if i.month in months_gs]
-    data_gs = data.ix[selected_days]
+    data_gs = data.loc[selected_days]
     doy_gs = [dd for dd in data_doy['M'] if dd in months_gs]
     
     years = list(data_gs.index.year)
@@ -542,7 +580,8 @@ def get_site_params(site, data, data_0, swc_i=None):
     params['EF_a'] = np.nanmean(data_0['ET_obs_m']) / np.nanmean(data_0['RF'])      # evaporative fraction (annual)
     params['AI'] = np.nanmean(data['ETo_m']) / np.nanmean(data['RF'])               # aridity index (growing season)
     params['EF'] = np.nanmean(data['ET_obs_m']) / np.nanmean(data['RF'])            # evaporative fraction (growing season)
-    params['WUE'] =  np.nanmean(data['GPP']) / np.nanmean(data['ET_obs_mol'])
+    params['GPP_mean'] = np.nanmean(data['GPP'])
+    params['ET_mean'] = np.nanmean(data['ET_obs_m'])
    
     # soil physical characteristics
     BB, SATPSI, SATDK, MAXSMC, DRYSMC = get_gldas_soil_data(soil_tex_id)
@@ -604,6 +643,11 @@ def get_site_params(site, data, data_0, swc_i=None):
     params['LAI_s'] = np.nanmean(data['LAI'])                # surface leaf area index m2 leaf/ m2 ground - mean of growing season
     params['LAI_v'] = params['LAI_s'] / params['frac_V']     # surface leaf area index m2 leaf/ m2 veg area 
     params['LAI'] = params['LAI_s']
+
+    params['fpar_s90'] = np.nanpercentile(data_0['fpar'], 90)  # surface leaf area index m2 leaf/ m2 ground - peak of growing season
+    params['fpar_s'] = np.nanmean(data['fpar'])                # surface leaf area index m2 leaf/ m2 ground - mean of growing season
+    params['fpar_v'] = params['fpar_s'] / params['frac_V']     # surface leaf area index m2 leaf/ m2 veg area 
+    params['fpar'] = params['fpar_s']
 
     params['s_obs'] = data['S'].dropna().values
     p_obs = np.histogramdd([params['s_obs']], [np.linspace(0, 1, 101)])[0]

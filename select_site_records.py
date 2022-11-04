@@ -230,7 +230,7 @@ def plot_data(data_gs, data, params, site, title=None, out_fig_file=None):
 
 
 def pool_plot_data(site):
-    plotpath = '../../PROJECTS/optimal_water_use_strategies/draft_figures/data_plots/data_growing_seasons'
+    plotpath = '../../DATA/OWUS/plots/data_growing_seasons'
     data_path = '../../DATA/WUS/WUS_input_data'
     pft = sites_params[sites_params['siteID'] == site]['pft'].values[0]
 
