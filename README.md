@@ -4,7 +4,7 @@
 
 This repository contains scripts necessary to repeat analysis in:
 
-M Bassiouni, S Manzoni, and G Vico (in prep). Optimal plant water use strategies explain soil moisture variability.
+M Bassiouni, S Manzoni, and G Vico (2023), Optimal plant water use strategies explain soil moisture variability. Advances in Water Resources,173, 104405. https://doi.org/10.1016/j.advwatres.2023.104405
 
 
 - *WUE_theory.ipynb*: executes scripts in this repository to generate theoretical figures of plant water use strategies
